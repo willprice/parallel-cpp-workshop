@@ -5,3 +5,5 @@ func_args
 countlines
 energy
 parallel_for
+parallel_reduce
+
