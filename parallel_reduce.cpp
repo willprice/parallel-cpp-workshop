@@ -9,27 +9,12 @@
 
 int main(int argc, char **argv)
 {
-  auto values = std::vector<double>(10000);
-
-  tbb::parallel_for(tbb::blocked_range<int>(0, values.size()),
-                    [&](tbb::blocked_range<int> r) {
-    for (int i = r.begin(); i < r.end(); i++) {
-      values[i] = std::sin(i * 0.001);
-    }
-  });
-
-  std::mutex m;
-
   auto total = tbb::parallel_reduce(
-      tbb::blocked_range<int>(0, values.size()),
+      tbb::blocked_range<int>(0, 10000),
       0.0,
       [&](tbb::blocked_range<int> r, double running_total) {
-        m.lock();
-        std::cout << "Total now = " << running_total << " from iterations "
-                  << r.begin() << " to " << r.end() << std::endl;
-        m.unlock();
         for (int i = r.begin(); i < r.end(); i++) {
-          running_total += values[i];
+          running_total += std::sin(i * 0.001);
         }
         return running_total;
       }, std::plus<double>());
