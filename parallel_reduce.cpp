@@ -2,6 +2,7 @@
 #include <vector>
 #include <cmath>
 #include <functional>
+#include <mutex>
 
 #include <tbb/parallel_for.h>
 #include <tbb/parallel_reduce.h>
@@ -17,10 +18,16 @@ int main(int argc, char **argv)
     }
   });
 
+  std::mutex m;
+
   auto total = tbb::parallel_reduce(
       tbb::blocked_range<int>(0, values.size()),
       0.0,
       [&](tbb::blocked_range<int> r, double running_total) {
+        m.lock();
+        std::cout << "Total now = " << running_total << " from iterations "
+                  << r.begin() << " to " << r.end() << std::endl;
+        m.unlock();
         for (int i = r.begin(); i < r.end(); i++) {
           running_total += values[i];
         }
