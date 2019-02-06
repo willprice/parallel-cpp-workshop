@@ -6,4 +6,5 @@ countlines
 energy
 parallel_for
 parallel_reduce
+mapreduce
 
