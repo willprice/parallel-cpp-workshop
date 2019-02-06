@@ -3,4 +3,4 @@ CPPFLAGS += --std=c++14 -Iinclude -ltbb
 
 
 .PHONY: all
-all: test
+all: test sum func_args map
